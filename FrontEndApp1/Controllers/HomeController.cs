@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Text;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace FrontEndApp1.Controllers
 {
@@ -50,15 +51,16 @@ namespace FrontEndApp1.Controllers
             request.Content = new ByteArrayContent(EncryptStringToBytes_Aes(CreatePasswordModel().Password, KEY, IV));
             */
 
+            string jsonPayload = JsonConvert.SerializeObject(new { EncryptedPassword = EncryptStringToBytes_Aes(CreatePasswordModel().Password, KEY, IV) });
+
             HttpRequestMessage request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri("http://localhost:51039/api/values"),
                 Headers = {
-                { HttpRequestHeader.Authorization.ToString(), "Basic YXBpOmFwaQ==" },
-                { HttpRequestHeader.ContentType.ToString(), "application/octet-stream" }
-            },
-                Content = new ByteArrayContent(EncryptStringToBytes_Aes(CreatePasswordModel().Password, KEY, IV))
+                    { HttpRequestHeader.Authorization.ToString(), "Basic YXBpOmFwaQ==" },
+                },
+                Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
             };
 
 

@@ -68,13 +68,17 @@ namespace API1.Controllers
             return "value";
         }
 
+        public class Dto
+        {
+            public byte[] EncryptedPassword { get; set; }
+        }
+
         // POST api/values
         //returns a 415 error
         [HttpPost]
-        public string Post([FromBody]byte[] encryptedPassword)
-        {
-
-            return DecryptAES(encryptedPassword, KEY, IV);
+        public string Post([FromBody]Dto dto)
+        {            
+            return DecryptAES(dto.EncryptedPassword, KEY, IV);
         }
 
         /*
